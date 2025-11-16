@@ -206,7 +206,7 @@ def top_tracks():
     # Build HTML/SVG for top 5 tracks
     tracks_html = '<svg width="500" height="400" xmlns="http://www.w3.org/2000/svg">'
     tracks_html += f'<rect width="500" height="400" fill="#{background_color}" stroke="#{border_color}" stroke-width="2"/>'
-    tracks_html += '<text x="250" y="30" font-family="Arial" font-size="20" fill="#1DB954" text-anchor="middle" font-weight="bold">Top 5 Tracks (Last 4 Weeks)</text>'
+    tracks_html += '<text x="250" y="30" font-family="Arial" font-size="20" fill="#1DB954" text-anchor="middle" font-weight="bold">Top Tracks</text>'
     
     y_pos = 70
     for idx, track in enumerate(data['items'][:5], 1):
