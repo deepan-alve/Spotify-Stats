@@ -1,2 +1,2 @@
 # Vercel entrypoint
-from spotify import app
+from api.spotify import app
