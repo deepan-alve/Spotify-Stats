@@ -19,6 +19,18 @@ PLACEHOLDER_URL = "https://source.unsplash.com/random/300x300/?aerial"
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 SPOTIFY_SECRET_ID = os.getenv("SPOTIFY_SECRET_ID")
 SPOTIFY_REFRESH_TOKEN = os.getenv("SPOTIFY_REFRESH_TOKEN")
+
+# Validate required environment variables
+if not SPOTIFY_CLIENT_ID or not SPOTIFY_SECRET_ID or not SPOTIFY_REFRESH_TOKEN:
+    missing = []
+    if not SPOTIFY_CLIENT_ID:
+        missing.append("SPOTIFY_CLIENT_ID")
+    if not SPOTIFY_SECRET_ID:
+        missing.append("SPOTIFY_SECRET_ID")
+    if not SPOTIFY_REFRESH_TOKEN:
+        missing.append("SPOTIFY_REFRESH_TOKEN")
+    raise RuntimeError(f"Missing required environment variables: {', '.join(missing)}. Please configure them in your deployment platform.")
+
 SPOTIFY_TOKEN = ""
 
 FALLBACK_THEME = "spotify.html.j2"
