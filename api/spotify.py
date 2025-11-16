@@ -40,6 +40,7 @@ NOW_PLAYING_URL = "https://api.spotify.com/v1/me/player/currently-playing"
 RECENTLY_PLAYING_URL = (
     "https://api.spotify.com/v1/me/player/recently-played?limit=10"
 )
+TOP_TRACKS_URL = "https://api.spotify.com/v1/me/top/tracks?limit=5&time_range=short_term"
 
 app = Flask(__name__)
 
@@ -192,6 +193,35 @@ def catch_all(path):
     resp = Response(svg, mimetype="image/svg+xml")
     resp.headers["Cache-Control"] = "s-maxage=1"
 
+    return resp
+
+
+@app.route('/top-tracks')
+def top_tracks():
+    background_color = request.args.get('background_color') or "181414"
+    border_color = request.args.get('border_color') or "181414"
+    
+    data = get(TOP_TRACKS_URL)
+    
+    # Build HTML/SVG for top 5 tracks
+    tracks_html = '<svg width="500" height="400" xmlns="http://www.w3.org/2000/svg">'
+    tracks_html += f'<rect width="500" height="400" fill="#{background_color}" stroke="#{border_color}" stroke-width="2"/>'
+    tracks_html += '<text x="250" y="30" font-family="Arial" font-size="20" fill="#1DB954" text-anchor="middle" font-weight="bold">Top 5 Tracks (Last 4 Weeks)</text>'
+    
+    y_pos = 70
+    for idx, track in enumerate(data['items'][:5], 1):
+        track_name = track['name'][:30] + '...' if len(track['name']) > 30 else track['name']
+        artist_name = track['artists'][0]['name'][:25] + '...' if len(track['artists'][0]['name']) > 25 else track['artists'][0]['name']
+        
+        tracks_html += f'<text x="20" y="{y_pos}" font-family="Arial" font-size="14" fill="#FFFFFF" font-weight="bold">{idx}. {track_name}</text>'
+        tracks_html += f'<text x="40" y="{y_pos + 20}" font-family="Arial" font-size="12" fill="#B3B3B3">{artist_name}</text>'
+        y_pos += 70
+    
+    tracks_html += '</svg>'
+    
+    resp = Response(tracks_html, mimetype="image/svg+xml")
+    resp.headers["Cache-Control"] = "s-maxage=3600"  # Cache for 1 hour
+    
     return resp
 
 
